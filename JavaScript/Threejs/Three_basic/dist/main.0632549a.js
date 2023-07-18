@@ -45540,21 +45540,51 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // set position of camera
-camera.position.set(0, 0, 10);
+camera.position.set(0, 0, 2);
 scene.add(camera);
 
-// add object
+// ##load texture
+var textureLoader = new THREE.TextureLoader();
+var texture = textureLoader.load("./texture/kuriipa.jpg");
+texture.minFilter = THREE.NearestFilter;
+texture.magFilter = THREE.NearestFilter;
+texture.minFilter = THREE.NearestMipMapLinearFilter;
+
+// ##add object
 var cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 var cubeMaterial = new THREE.MeshBasicMaterial({
-  color: 0xffff00
+  color: 0xffffff,
+  map: texture
 });
 var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-
+console.log(cubeGeometry);
 // cube.position.set(3,0,0);
-
 // cube.rotation.set(Math.PI/4,0,0);
-
 scene.add(cube);
+
+// #bufferGeometry
+// for (let i = 0; i < 50; i++) {
+//   const geometry = new THREE.BufferGeometry();
+//   const positionarray = new Float32Array(9);
+//   for (let j = 0; j < 9; j++) {
+//     positionarray[j] = Math.random() * 10 - 5;
+//   }
+//   geometry.setAttribute(
+//     "position",
+//     new THREE.BufferAttribute(positionarray, 3)
+//   );
+//   let color = new THREE.Color(Math.random(), Math.random(), Math.random());
+//   const material = new THREE.MeshBasicMaterial({
+//     color: color,
+//     transparent: true,
+//     opacity: 0.5,
+//   });
+//   const mesh = new THREE.Mesh(geometry, material);
+//   console.log(mesh);
+//   scene.add(mesh);
+// }
+
+// ##GUI
 var gui = new dat.GUI();
 gui.add(cube.position, "x").min(0).max(5).step(0.01).name("x轴").onChange(function (value) {
   console.log("value has been changed", value);
@@ -45579,10 +45609,11 @@ gui.addColor(params, "color").onChange(function (value) {
   cube.material.color.set(value);
 });
 //set visible
-gui.add(cube, "visible").name("visible");
+
 gui.add(params, "fn").name("move");
 var folder = gui.addFolder("set cube");
 folder.add(cube.material, "wireframe");
+folder.add(cube, "visible").name("visible");
 
 // Renderer
 var renderer = new THREE.WebGLRenderer();
@@ -45595,7 +45626,7 @@ document.body.appendChild(renderer.domElement);
 var controls = new _OrbitControls.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 // add axes
-var axesHelper = new THREE.AxesHelper(5);
+var axesHelper = new THREE.AxesHelper(20);
 scene.add(axesHelper);
 
 // set clock
@@ -45710,7 +45741,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60095" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55951" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

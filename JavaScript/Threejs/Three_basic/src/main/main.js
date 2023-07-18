@@ -7,7 +7,6 @@ import gsap from "gsap";
 
 import * as dat from "dat.gui";
 
-
 // console.log(THREE)
 
 // Scene
@@ -22,19 +21,53 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 // set position of camera
-camera.position.set(0, 0, 10);
+camera.position.set(0, 0, 2);
 scene.add(camera);
 
-// add object
+// ##load texture
+const textureLoader = new THREE.TextureLoader();
+const texture = textureLoader.load("./texture/kuriipa.jpg");
+
+texture.minFilter = THREE.NearestFilter;
+texture.magFilter = THREE.NearestFilter;
+texture.minFilter = THREE.NearestMipMapLinearFilter;
+
+// ##add object
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+const cubeMaterial = new THREE.MeshBasicMaterial({
+  color: 0xffffff,
+  map: texture,
+});
+
 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-
+console.log(cubeGeometry);
 // cube.position.set(3,0,0);
-
 // cube.rotation.set(Math.PI/4,0,0);
-
 scene.add(cube);
+
+// #bufferGeometry
+// for (let i = 0; i < 50; i++) {
+//   const geometry = new THREE.BufferGeometry();
+//   const positionarray = new Float32Array(9);
+//   for (let j = 0; j < 9; j++) {
+//     positionarray[j] = Math.random() * 10 - 5;
+//   }
+//   geometry.setAttribute(
+//     "position",
+//     new THREE.BufferAttribute(positionarray, 3)
+//   );
+//   let color = new THREE.Color(Math.random(), Math.random(), Math.random());
+//   const material = new THREE.MeshBasicMaterial({
+//     color: color,
+//     transparent: true,
+//     opacity: 0.5,
+//   });
+//   const mesh = new THREE.Mesh(geometry, material);
+//   console.log(mesh);
+//   scene.add(mesh);
+// }
+
+// ##GUI
 const gui = new dat.GUI();
 gui
   .add(cube.position, "x")
@@ -61,12 +94,12 @@ gui.addColor(params, "color").onChange((value) => {
   cube.material.color.set(value);
 });
 //set visible
-gui.add(cube, "visible").name("visible");
 
-gui.add(params,"fn").name("move");
+gui.add(params, "fn").name("move");
 
 var folder = gui.addFolder("set cube");
 folder.add(cube.material, "wireframe");
+folder.add(cube, "visible").name("visible");
 
 // Renderer
 const renderer = new THREE.WebGLRenderer();
@@ -80,7 +113,7 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 // add axes
-const axesHelper = new THREE.AxesHelper(5);
+const axesHelper = new THREE.AxesHelper(20);
 scene.add(axesHelper);
 
 // set clock
