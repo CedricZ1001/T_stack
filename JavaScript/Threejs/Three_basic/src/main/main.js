@@ -34,7 +34,7 @@ texture.minFilter = THREE.NearestMipMapLinearFilter;
 
 // ##add object
 const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
-const cubeMaterial = new THREE.MeshBasicMaterial({
+const cubeMaterial = new THREE.MeshStandardMaterial({
   color: 0xffffff,
   map: texture,
 });
@@ -44,6 +44,10 @@ console.log(cubeGeometry);
 // cube.position.set(3,0,0);
 // cube.rotation.set(Math.PI/4,0,0);
 scene.add(cube);
+
+//##light
+const light = new THREE.AmbientLight(0xffffff,1);
+scene.add(light);
 
 // #bufferGeometry
 // for (let i = 0; i < 50; i++) {
@@ -81,25 +85,41 @@ gui
   .onFinishChange((value) => {
     console.log("change is completed", value);
   });
-const params = {
-  color: "#ffff00",
+
+const cube_params = {
+  cube_color: "#ffff00",
   fn: () => {
     gsap.to(cube.position, { x: 5, duration: 2, yoyo: true, repeat: -1 });
   },
 };
 
+const light_params = {
+    ambient_color:"#ffffff",
+    
+  };
+
+
 //set color
-gui.addColor(params, "color").onChange((value) => {
+gui.addColor(cube_params, "cube_color").onChange((value) => {
   console.log("color has been changed", value);
   cube.material.color.set(value);
 });
+
 //set visible
 
-gui.add(params, "fn").name("move");
+gui.add(cube_params, "fn").name("move");
 
-var folder = gui.addFolder("set cube");
-folder.add(cube.material, "wireframe");
-folder.add(cube, "visible").name("visible");
+var folder_1 = gui.addFolder("set cube");
+folder_1.add(cube.material, "wireframe");
+folder_1.add(cube, "visible").name("visible");
+
+var folder_2 = gui.addFolder("set light");
+folder_2.addColor(light_params,"ambient_color").onChange((value)=>{
+    light.color.set(value);
+})
+folder_2.add(light,"intensity").min(0).max(1).step(0.01);
+
+
 
 // Renderer
 const renderer = new THREE.WebGLRenderer();
