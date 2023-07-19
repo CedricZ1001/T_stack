@@ -45563,8 +45563,13 @@ console.log(cubeGeometry);
 scene.add(cube);
 
 //##light
-var light = new THREE.AmbientLight(0xffffff, 1);
-scene.add(light);
+// #ambientlight
+var ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
+// #directionlight
+var directionLight = new THREE.DirectionalLight(0xffffff, 1);
+directionLight.position.set(10, 10, 10);
+scene.add(directionLight);
 
 // #bufferGeometry
 // for (let i = 0; i < 50; i++) {
@@ -45590,11 +45595,7 @@ scene.add(light);
 
 // ##GUI
 var gui = new dat.GUI();
-gui.add(cube.position, "x").min(0).max(5).step(0.01).name("x轴").onChange(function (value) {
-  console.log("value has been changed", value);
-}).onFinishChange(function (value) {
-  console.log("change is completed", value);
-});
+var folder_1 = gui.addFolder("set cube");
 var cube_params = {
   cube_color: "#ffff00",
   fn: function fn() {
@@ -45607,26 +45608,35 @@ var cube_params = {
   }
 };
 var light_params = {
-  ambient_color: "#ffffff"
+  ambient_color: "#ffffff",
+  direction_color: "#ffffff"
 };
 
 //set color
-gui.addColor(cube_params, "cube_color").onChange(function (value) {
+folder_1.addColor(cube_params, "cube_color").onChange(function (value) {
   console.log("color has been changed", value);
   cube.material.color.set(value);
 });
 
 //set visible
 
-gui.add(cube_params, "fn").name("move");
-var folder_1 = gui.addFolder("set cube");
+folder_1.add(cube_params, "fn").name("move");
 folder_1.add(cube.material, "wireframe");
 folder_1.add(cube, "visible").name("visible");
+folder_1.add(cube.position, "x").min(0).max(5).step(0.01).name("x轴").onChange(function (value) {
+  console.log("value has been changed", value);
+}).onFinishChange(function (value) {
+  console.log("change is completed", value);
+});
 var folder_2 = gui.addFolder("set light");
 folder_2.addColor(light_params, "ambient_color").onChange(function (value) {
-  light.color.set(value);
+  ambientLight.color.set(value);
 });
-folder_2.add(light, "intensity").min(0).max(1).step(0.01);
+folder_2.add(ambientLight, "intensity").min(0).max(1).step(0.01).name("ab_intensity");
+folder_2.addColor(light_params, "direction_color").onChange(function (value) {
+  directionLight.color.set(value);
+});
+folder_2.add(directionLight, "intensity").min(0).max(1).step(0.01).name("dr_intensity");
 
 // Renderer
 var renderer = new THREE.WebGLRenderer();

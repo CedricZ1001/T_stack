@@ -46,8 +46,14 @@ console.log(cubeGeometry);
 scene.add(cube);
 
 //##light
-const light = new THREE.AmbientLight(0xffffff,1);
-scene.add(light);
+// #ambientlight
+const ambientLight = new THREE.AmbientLight(0xffffff,1);
+scene.add(ambientLight);
+// #directionlight
+const directionLight = new THREE.DirectionalLight(0xffffff,1);
+directionLight.position.set(10,10,10);
+scene.add(directionLight)
+
 
 // #bufferGeometry
 // for (let i = 0; i < 50; i++) {
@@ -73,7 +79,36 @@ scene.add(light);
 
 // ##GUI
 const gui = new dat.GUI();
-gui
+
+var folder_1 = gui.addFolder("set cube");
+
+const cube_params = {
+  cube_color: "#ffff00",
+  fn: () => {
+    gsap.to(cube.position, { x: 5, duration: 2, yoyo: true, repeat: -1 });
+  },
+};
+
+const light_params = {
+    ambient_color:"#ffffff",
+    direction_color:"#ffffff",
+  };
+
+
+//set color
+folder_1.addColor(cube_params, "cube_color").onChange((value) => {
+  console.log("color has been changed", value);
+  cube.material.color.set(value);
+});
+
+//set visible
+
+folder_1.add(cube_params, "fn").name("move");
+
+folder_1.add(cube.material, "wireframe");
+folder_1.add(cube, "visible").name("visible");
+
+folder_1
   .add(cube.position, "x")
   .min(0)
   .max(5)
@@ -86,39 +121,15 @@ gui
     console.log("change is completed", value);
   });
 
-const cube_params = {
-  cube_color: "#ffff00",
-  fn: () => {
-    gsap.to(cube.position, { x: 5, duration: 2, yoyo: true, repeat: -1 });
-  },
-};
-
-const light_params = {
-    ambient_color:"#ffffff",
-    
-  };
-
-
-//set color
-gui.addColor(cube_params, "cube_color").onChange((value) => {
-  console.log("color has been changed", value);
-  cube.material.color.set(value);
-});
-
-//set visible
-
-gui.add(cube_params, "fn").name("move");
-
-var folder_1 = gui.addFolder("set cube");
-folder_1.add(cube.material, "wireframe");
-folder_1.add(cube, "visible").name("visible");
-
 var folder_2 = gui.addFolder("set light");
 folder_2.addColor(light_params,"ambient_color").onChange((value)=>{
-    light.color.set(value);
+    ambientLight.color.set(value);
 })
-folder_2.add(light,"intensity").min(0).max(1).step(0.01);
-
+folder_2.add(ambientLight,"intensity").min(0).max(1).step(0.01).name("ab_intensity");
+folder_2.addColor(light_params,"direction_color").onChange((value)=>{
+    directionLight.color.set(value);
+})
+folder_2.add(directionLight,"intensity").min(0).max(1).step(0.01).name("dr_intensity");
 
 
 // Renderer
