@@ -45603,7 +45603,7 @@ var cube_params = {
       x: 5,
       duration: 2,
       yoyo: true,
-      repeat: -1
+      repeat: 1
     });
   }
 };

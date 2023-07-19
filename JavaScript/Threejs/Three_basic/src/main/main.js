@@ -85,7 +85,7 @@ var folder_1 = gui.addFolder("set cube");
 const cube_params = {
   cube_color: "#ffff00",
   fn: () => {
-    gsap.to(cube.position, { x: 5, duration: 2, yoyo: true, repeat: -1 });
+    gsap.to(cube.position, { x: 5, duration: 2, yoyo: true, repeat: 1 });
   },
 };
 
