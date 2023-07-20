@@ -45542,10 +45542,47 @@ var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHei
 // set position of camera
 camera.position.set(0, 0, 2);
 scene.add(camera);
+var div = document.createElement("div");
+div.style.width = "200px";
+div.style.height = "200px";
+div.style.position = "fixed";
+div.style.left = 0;
+div.style.top = 0;
+div.style.color = "#ffffff";
+document.body.appendChild(div);
+
+// loadder
+var event = {};
+event.onLoad = function () {
+  console.log("over");
+};
+event.onProgress = function (url, num, total) {
+  console.log("加载图片：", url);
+  var value = (num / total * 100).toFixed(2) + "%";
+  console.log("图片加载进度：", value);
+  div.innerHTML = value;
+};
+event.onError = function (e) {
+  console.log("图片加载错误");
+  console.log(e);
+};
+
+// set loader controller
+var loadingMannager = new THREE.LoadingManager(event.onLoad, event.onProgress, event.onError);
 
 // ##load texture
-var textureLoader = new THREE.TextureLoader();
+var textureLoader = new THREE.TextureLoader(loadingMannager);
 var texture = textureLoader.load("./texture/kuriipa.jpg");
+var bricks_col = textureLoader.load("./texture/BricksReclaimedWhitewashedOffset001/BricksReclaimedWhitewashedOffset001_COL_2K_METALNESS.png");
+var bricks_nrm = textureLoader.load("./texture/BricksReclaimedWhitewashedOffset001/BricksReclaimedWhitewashedOffset001_NRM_2K_METALNESS.png");
+var bricks_bum = textureLoader.load("./texture/BricksReclaimedWhitewashedOffset001/BricksReclaimedWhitewashedOffset001_BUMP_2K_METALNESS.png");
+var bricks_ao = textureLoader.load("./texture/BricksReclaimedWhitewashedOffset001/BricksReclaimedWhitewashedOffset001_AO_2K_METALNESS.png");
+var bricks_rough = textureLoader.load("./texture/BricksReclaimedWhitewashedOffset001/BricksReclaimedWhitewashedOffset001_ROUGHNESS_2K_METALNESS.png");
+var bronze_col = textureLoader.load("./texture/MetalBronzeWorn001/MetalBronzeWorn001_COL_2K_METALNESS.png");
+var bronze_nrm = textureLoader.load("./texture/MetalBronzeWorn001/MetalBronzeWorn001_NRM_2K_METALNESS.png");
+var bronze_bum = textureLoader.load("./texture/MetalBronzeWorn001/MetalBronzeWorn001_BUMP_2K_METALNESS.png");
+var bronze_rough = textureLoader.load("./texture/MetalBronzeWorn001/MetalBronzeWorn001_ROUGHNESS_2K_METALNESS.png");
+var bronze_metal = textureLoader.load("./texture/MetalBronzeWorn001/MetalBronzeWorn001_METALNESS_2K_METALNESS.png");
 texture.minFilter = THREE.NearestFilter;
 texture.magFilter = THREE.NearestFilter;
 texture.minFilter = THREE.NearestMipMapLinearFilter;
@@ -45553,18 +45590,47 @@ texture.minFilter = THREE.NearestMipMapLinearFilter;
 // ##add object
 var cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 var cubeMaterial = new THREE.MeshStandardMaterial({
-  color: 0xffffff,
-  map: texture
+  //   color: 0xffffff,
+  map: texture,
+  roughness: 0.15,
+  metalness: 0.15
 });
 var cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
 console.log(cubeGeometry);
 // cube.position.set(3,0,0);
 // cube.rotation.set(Math.PI/4,0,0);
 scene.add(cube);
+var circleGeometry = new THREE.SphereGeometry(0.8);
+var circleMaterial = new THREE.MeshStandardMaterial({
+  color: 0xffffff,
+  map: bricks_col,
+  aoMap: bricks_ao,
+  aoMapIntensity: 1,
+  bumpMap: bricks_bum,
+  bumpScale: 1,
+  normalMap: bricks_nrm,
+  roughnessMap: bricks_rough
+});
+var circle = new THREE.Mesh(circleGeometry, circleMaterial);
+circle.position.set(0, 2, 0);
+scene.add(circle);
+var metalGeometry = new THREE.SphereGeometry(0.8);
+var metalMaterial = new THREE.MeshStandardMaterial({
+  color: 0xffffff,
+  map: bronze_col,
+  bumpMap: bronze_bum,
+  normalMap: bronze_nrm,
+  roughnessMap: bronze_rough,
+  metalnessMap: bronze_metal,
+  metalness: 0.9
+});
+var metal = new THREE.Mesh(metalGeometry, metalMaterial);
+metal.position.set(2, 2, 0);
+scene.add(metal);
 
 //##light
 // #ambientlight
-var ambientLight = new THREE.AmbientLight(0xffffff, 1);
+var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 // #directionlight
 var directionLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -45600,8 +45666,8 @@ var cube_params = {
   cube_color: "#ffff00",
   fn: function fn() {
     _gsap.default.to(cube.position, {
-      x: 5,
-      duration: 2,
+      x: 20,
+      duration: 5,
       yoyo: true,
       repeat: 1
     });
@@ -45623,11 +45689,16 @@ folder_1.addColor(cube_params, "cube_color").onChange(function (value) {
 folder_1.add(cube_params, "fn").name("move");
 folder_1.add(cube.material, "wireframe");
 folder_1.add(cube, "visible").name("visible");
-folder_1.add(cube.position, "x").min(0).max(5).step(0.01).name("x轴").onChange(function (value) {
-  console.log("value has been changed", value);
-}).onFinishChange(function (value) {
-  console.log("change is completed", value);
-});
+folder_1.add(cube.position, "x").min(0).max(20).step(0.01).name("x轴");
+//   .onChange((value) => {
+//     console.log("value has been changed", value);
+//   })
+//   .onFinishChange((value) => {
+//     console.log("change is completed", value);
+//   });
+var material = folder_1.addFolder("material");
+material.add(cube.material, "roughness").min(0).max(1).step(0.01);
+material.add(cube.material, "metalness").min(0).max(1).step(0.01);
 var folder_2 = gui.addFolder("set light");
 folder_2.addColor(light_params, "ambient_color").onChange(function (value) {
   ambientLight.color.set(value);
