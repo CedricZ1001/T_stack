@@ -1,5 +1,5 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
+import React from 'react'; //core
+import ReactDOM from 'react-dom/client'; //rendering
 import './index.css';
 import App from './App';
 

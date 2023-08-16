@@ -1,11 +1,12 @@
-
+import "./App.css"
 
 function App() {
   return (
     <div className="App">
-      app
+      <span className="active">this is a span</span>
     </div>
   );
 }
 
 export default App;
+ 
