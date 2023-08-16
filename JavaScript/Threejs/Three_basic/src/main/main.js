@@ -35,7 +35,7 @@ const camera = new THREE.PerspectiveCamera(
 
 
 // set position of camera
-camera.position.set(0, 0, 2);
+camera.position.set(0, 5, 5);
 scene.add(camera);
 
 
@@ -45,20 +45,50 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
 // #directionlight
-const directionLight = new THREE.DirectionalLight(0xffffff, 1);
-directionLight.position.set(10, 10, 10);
+const directionLight = new THREE.SpotLight(0xffffff, 1);
+directionLight.position.set(5, 5, 5);
 directionLight.castShadow = true;
+directionLight.shadow.radius = 20;
+directionLight.shadow.mapSize.set(4096,4096);
+
+
+// directionLight.shadow.camera.near = 0.5;
+// directionLight.shadow.camera.far = 500;
+// directionLight.shadow.camera.top = 5;
+// directionLight.shadow.camera.bottom = -5;
+// directionLight.shadow.camera.left = -5;
+// directionLight.shadow.camera.right = 5;
+
 scene.add(directionLight);
+const gui = new dat.GUI();
+
+
 
 const sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
 const spmaterial = new THREE.MeshStandardMaterial();
 const sphere = new THREE.Mesh(sphereGeometry,spmaterial);
 
+directionLight.target = sphere;
+
 sphere.position.set(0,0,0);
 sphere.castShadow = true;
 scene.add(sphere);
 
-const planeGeometry = new THREE.PlaneGeometry(10, 10);
+gui.add(sphere.position, "x")
+.min(-25)
+.max(25)
+.step(0.1)
+gui.add(sphere.position, "y")
+.min(0)
+.max(25)
+.step(0.1)
+gui.add(sphere.position, "z")
+.min(-25)
+.max(25)
+.step(0.1)
+
+
+const planeGeometry = new THREE.PlaneGeometry(50, 50);
 const plane = new THREE.Mesh(planeGeometry,spmaterial);
 plane.position.set(0,-1,0);
 plane.rotation.x = -Math.PI / 2;

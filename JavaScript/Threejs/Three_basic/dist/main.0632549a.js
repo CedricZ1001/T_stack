@@ -45906,7 +45906,7 @@ var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
 // set position of camera
-camera.position.set(0, 0, 2);
+camera.position.set(0, 5, 5);
 scene.add(camera);
 
 //##light
@@ -45915,17 +45915,32 @@ var ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
 scene.add(ambientLight);
 
 // #directionlight
-var directionLight = new THREE.DirectionalLight(0xffffff, 1);
-directionLight.position.set(10, 10, 10);
+var directionLight = new THREE.SpotLight(0xffffff, 1);
+directionLight.position.set(5, 5, 5);
 directionLight.castShadow = true;
+directionLight.shadow.radius = 20;
+directionLight.shadow.mapSize.set(4096, 4096);
+
+// directionLight.shadow.camera.near = 0.5;
+// directionLight.shadow.camera.far = 500;
+// directionLight.shadow.camera.top = 5;
+// directionLight.shadow.camera.bottom = -5;
+// directionLight.shadow.camera.left = -5;
+// directionLight.shadow.camera.right = 5;
+
 scene.add(directionLight);
+var gui = new dat.GUI();
 var sphereGeometry = new THREE.SphereGeometry(1, 20, 20);
 var spmaterial = new THREE.MeshStandardMaterial();
 var sphere = new THREE.Mesh(sphereGeometry, spmaterial);
+directionLight.target = sphere;
 sphere.position.set(0, 0, 0);
 sphere.castShadow = true;
 scene.add(sphere);
-var planeGeometry = new THREE.PlaneGeometry(10, 10);
+gui.add(sphere.position, "x").min(-25).max(25).step(0.1);
+gui.add(sphere.position, "y").min(0).max(25).step(0.1);
+gui.add(sphere.position, "z").min(-25).max(25).step(0.1);
+var planeGeometry = new THREE.PlaneGeometry(50, 50);
 var plane = new THREE.Mesh(planeGeometry, spmaterial);
 plane.position.set(0, -1, 0);
 plane.rotation.x = -Math.PI / 2;
@@ -45993,7 +46008,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "58969" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62538" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];
