@@ -1,12 +1,33 @@
+import React, { createRef } from "react"
 import "./App.css"
 
-function App() {
-  return (
-    <div className="App">
-      <span className="active">this is a span</span>
-    </div>
-  );
+class Counter extends React.Component {
+  msgRef = createRef()
+
+
+  getValue () {
+    console.log(this.msgRef.current.value)
+  }
+
+  render () {
+    return (
+      <>
+        <input
+          type="text"
+          ref={this.msgRef}
+        />
+        <button onClick={() => this.getValue()}>click</button>
+      </>
+    )
+  }
 }
 
-export default App;
- 
+function App () {
+  return (
+    <div className="App">
+      <Counter />
+    </div>
+  )
+}
+
+export default App
