@@ -1,23 +1,24 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
+import React from "react"
+import ReactDOM from "react-dom/client"
 //import "./index.css";
-import styles from "./index.module.css";
-import logo from "./logo192.png";
+import styles from "./index.module.css"
+import logo from "./logo192.png"
+import App from "./App"
 
-const name = "CedricZ1";
+const name = "CedricZ1"
 
 const obj = {
     firstName: "Cedric",
     lastName: "Chen",
-};
-
-function formatName(name) {
-    return name.firstName + " " + name.lastName;
 }
 
-const greet = <div>good</div>;
-const show = true;
-const a = [0, 1, 2];
+function formatName (name) {
+    return name.firstName + " " + name.lastName
+}
+
+const greet = <div>good</div>
+const show = true
+const a = [0, 1, 2]
 
 const jsx = (
     <div className={styles.app}>
@@ -36,7 +37,8 @@ const jsx = (
             className={styles.logo}
             style={{ width: "88px", height: "88px" }}
         />
+        <App></App>
     </div>
-);
-const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(jsx);
+)
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(<App></App>)
